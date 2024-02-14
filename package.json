@@ -1,0 +1,18 @@
+{
+  "name": "kyubi",
+  "packageManager": "yarn@4.1.0",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "repository": "git@github.com:AntoineYANG/kyubi.git",
+  "author": "kyusho <antoineyang99@gmail.com>",
+  "scripts": {
+    "build": "lerna run build"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "lerna": "^8.1.2"
+  }
+}

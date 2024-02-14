@@ -1,0 +1,44 @@
+{
+  "name": "kyubi-js",
+  "version": "0.1.0-alpha.1",
+  "license": "MIT",
+  "description": "A website engine for the modern docs, blogs, wikis, and more. Based on MDX and Next.js.",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json",
+    "./loader": "./dist/loader.js"
+  },
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/next": "^9.0.0",
+    "@types/node": "^20.11.17",
+    "@types/react": ">=17",
+    "@types/webpack": "^5.28.5",
+    "next": "^14.1.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@mdx-js/mdx": "^3.0.1",
+    "@mdx-js/react": "^3.0.1",
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "gray-matter": "^4.0.3",
+    "listr2": "^8.0.2"
+  },
+  "peerDependencies": {
+    "react": ">=17",
+    "react-dom": ">=17"
+  }
+}
