@@ -2,7 +2,7 @@
  * @Author: Kyusho 
  * @Date: 2024-02-14 22:26:33 
  * @Last Modified by: Kyusho
- * @Last Modified time: 2024-02-16 00:16:17
+ * @Last Modified time: 2024-02-16 01:03:19
  */
 
 import path from "node:path";
@@ -89,7 +89,8 @@ import Button from "kyubi-js/elements/button";
 import "kyubi-js/index.css";`
     );
     // replace original default export
-    parts.splice(parts.length - 1, 1, (
+    const defaultExportIndex = parts.findIndex(part => part.startsWith("export default"));
+    parts.splice(defaultExportIndex, 1, (
 `export default function KyubiMDXPage(props) {
   return _jsx(Page, {
     title: "${title}",

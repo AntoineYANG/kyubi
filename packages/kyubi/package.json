@@ -1,6 +1,6 @@
 {
   "name": "kyubi-js",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "license": "MIT",
   "description": "A website engine for the modern docs, blogs, wikis, and more. Based on MDX and Next.js.",
   "main": "dist/index.js",
@@ -12,7 +12,10 @@
     "./package.json": "./package.json",
     "./loader": "./dist/loader.js",
     "./layout": "./dist/layout/index.js",
-    "./elements/*": "./dist/elements/*",
+    "./elements/*": {
+      "import": "./dist/elements/*.mjs",
+      "require": "./dist/elements/*.js"
+    },
     "./index.css": "./dist/index.css"
   },
   "types": "dist/index.d.ts",
