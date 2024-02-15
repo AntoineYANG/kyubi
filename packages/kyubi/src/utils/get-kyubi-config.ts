@@ -40,6 +40,11 @@ export interface IKyubiConfig {
      */
     basePath: string;
   };
+  /**
+   * If true, the intermediate compilation results will be emitted to a temporary directory ".kyubi/intermediates".
+   * @default false
+   */
+  debugIntermediates: boolean;
 }
 
 export type KyubiConfig = AllPartial<IKyubiConfig>;
@@ -60,6 +65,7 @@ export const defaultKyubiConfig: IKyubiConfig = {
   extra: {
     basePath: "/extra",
   },
+  debugIntermediates: false,
 };
 
 export const defineConfig = (config: KyubiConfig | ((config: IKyubiConfig) => KyubiConfig)): IKyubiConfig => {

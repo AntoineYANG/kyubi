@@ -1,5 +1,10 @@
 module.exports = {
     "extends": [
-        "standard"
-    ]
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
+    ],
+    "rules": {
+        "react/react-in-jsx-scope": "off",
+    },
 }

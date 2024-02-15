@@ -2,16 +2,21 @@
  * @Author: Kyusho 
  * @Date: 2024-02-14 22:26:33 
  * @Last Modified by: Kyusho
- * @Last Modified time: 2024-02-15 00:21:33
+ * @Last Modified time: 2024-02-15 13:28:25
  */
+
+import path from "node:path";
 
 import type { LoaderContext } from "webpack";
 
 import type { IKyubiConfig } from "./utils/get-kyubi-config";
+import { emitFileSync } from "./utils/file-helper";
+import { intermediatesDir, kyubiDir } from "./constance";
 
 
 interface ILoaderContext {
   config: IKyubiConfig;
+  rootDir: string;
 }
 
 interface ILoader {
@@ -33,7 +38,7 @@ const makeProcessor = async (): Promise<CreateProcessor> => {
 
 const loader: ILoader = function (this, source) {
   const { resourcePath } = this;
-  const { config } = this.getOptions();
+  const { config, rootDir } = this.getOptions();
   const callback = this.async();
   makeProcessor().then(
     processor => processor({
@@ -48,10 +53,17 @@ const loader: ILoader = function (this, source) {
       value: source,
     })
   ).then(res => {
-    console.log([res]);
     const data = `// Path: ${resourcePath}
-${`${res}`.replaceAll(/^/gm, '  ')}
+
+// --------------------------------
+
+${`${res}`}
+
+// --------------------------------
 `;
+    if (config.debugIntermediates) {
+      emitFileSync(path.join(rootDir, kyubiDir, intermediatesDir, path.relative(path.join(rootDir, "pages"), resourcePath)), data);
+    }
     callback(null, data);
   }).catch((err: any) => {
     callback(err);
