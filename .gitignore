@@ -23,11 +23,11 @@ yarn-error.log*
 *.iml
 
 # Dependency directories
-/.pnp/
+.pnp/
 .pnp.*
 .pnp.loader.*
 /.yarn/
 
 # Build files
-/out/
-/dist/
+out/
+dist/
