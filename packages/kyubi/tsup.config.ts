@@ -4,7 +4,7 @@ import { type Options, defineConfig } from "tsup";
 const common = (options: Options) => ({
   target: 'es2020',
   format: 'cjs',
-  entry: ['src/index.ts'],
+  entry: ['src/index.ts', 'src/layout/index.ts', 'src/elements/*'],
   splitting: false,
   sourcemap: true,
   dts: true,

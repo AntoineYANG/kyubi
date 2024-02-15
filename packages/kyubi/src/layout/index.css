@@ -1,0 +1,160 @@
+/*
+ * @Author: Kyusho 
+ * @Date: 2024-02-15 14:25:38 
+ * @Last Modified by: Kyusho
+ * @Last Modified time: 2024-02-15 22:44:22
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* reset ul style */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/**
+ * adjust the basic text style inside the main content
+ */
+
+main {
+  line-height: 2;
+  color: rgb(31 41 55 / .8);
+}
+
+:is(.ky-dark main) {
+  color: rgb(243 244 246 / .8);
+}
+
+/*
+ * Notice that the ruby elements don't take an extra space between lines by default,
+ * so we need to use some tricks to make it looks better.
+ */
+
+main ruby > rt {
+  transform: translateY(-0.2em);
+}
+
+main ruby > rt::before {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 2.5em;
+  margin-right: -2px;
+}
+
+/**
+ * Well, in a structured article, the space between the paragraphs is necessary.
+ */
+
+main p, main blockquote {
+  margin-block: 0.5em;
+}
+
+main p {
+  padding-block: 0.5em;
+}
+
+/**
+ * Use opacity to make the text of different levels of importance look *different*.
+ */
+
+main small {
+  color: rgb(31 41 55 / .6);
+}
+
+:is(.ky-dark main small) {
+  color: rgb(243 244 246 / .6);
+}
+
+main h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: rgb(31 41 55 / 1.0);
+  margin-block: 0.5em;
+}
+
+:is(.ky-dark main) h1 {
+  color: rgb(243 244 246 / 1.0);
+}
+
+main h2 {
+  font-size: 1.75rem;
+  font-weight: 650;
+  color: rgb(31 41 55 / 0.97);
+  margin-block: 0.5em;
+}
+
+:is(.ky-dark main) h2 {
+  color: rgb(243 244 246 / 0.97);
+}
+
+main h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: rgb(31 41 55 / 0.94);
+  margin-block: 0.5em;
+}
+
+:is(.ky-dark main) h3 {
+  color: rgb(243 244 246 / 0.94);
+}
+
+main h4 {
+  font-size: 1.35rem;
+  font-weight: 550;
+  color: rgb(31 41 55 / 0.91);
+  margin-block: 0.5em;
+}
+
+:is(.ky-dark main) h4 {
+  color: rgb(243 244 246 / 0.91);
+}
+
+main h5 {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: rgb(31 41 55 / 0.88);
+  margin-block: 0.5em;
+}
+
+:is(.ky-dark main) h5 {
+  color: rgb(243 244 246 / 0.88);
+}
+
+main h6 {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: rgb(31 41 55 / 0.85);
+  margin-block: 0.5em;
+}
+
+:is(.ky-dark main) h6 {
+  color: rgb(243 244 246 / 0.85);
+}
+
+/**
+ * some ornamental styles
+ */
+
+:root {
+  --orn-line-width: 1px;
+  --ky-text-opacity: 0.6;
+}
+
+.vertical-line {
+  background-image: linear-gradient(
+    to right,
+    transparent calc(50% - var(--orn-line-width) / 2),
+    currentColor calc(50% - var(--orn-line-width) / 2),
+    currentColor calc(50% + var(--orn-line-width) / 2),
+    transparent calc(50% + var(--orn-line-width) / 2)
+  );
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+}

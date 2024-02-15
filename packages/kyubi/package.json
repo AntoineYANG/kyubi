@@ -10,12 +10,19 @@
   "exports": {
     ".": "./dist/index.js",
     "./package.json": "./package.json",
-    "./loader": "./dist/loader.js"
+    "./loader": "./dist/loader.js",
+    "./layout": "./dist/layout/index.js",
+    "./elements/*": "./dist/elements/*",
+    "./index.css": "./dist/index.css"
   },
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch"
+    "build": "yarn build:core && yarn build:layout",
+    "build:core": "tsup",
+    "build:layout": "postcss src/layout/index.css -o dist/index.css",
+    "dev:core": "tsup --watch",
+    "dev:layout": "postcss src/layout/index.css -o dist/index.css --watch",
+    "dev": "yarn dev:core & yarn dev:layout"
   },
   "engines": {
     "node": ">=20"
@@ -24,8 +31,13 @@
     "@types/next": "^9.0.0",
     "@types/node": "^20.11.17",
     "@types/react": ">=17",
+    "@types/react-dom": "^18.2.19",
     "@types/webpack": "^5.28.5",
+    "autoprefixer": "^10.4.17",
     "next": "^14.1.0",
+    "postcss": "^8.4.35",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^3.4.1",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3"
   },
@@ -33,9 +45,9 @@
     "@mdx-js/mdx": "^3.0.1",
     "@mdx-js/react": "^3.0.1",
     "chalk": "^5.3.0",
-    "commander": "^12.0.0",
     "gray-matter": "^4.0.3",
-    "listr2": "^8.0.2"
+    "react-aria": "^3.32.0",
+    "react-stately": "^3.30.0"
   },
   "peerDependencies": {
     "react": ">=17",
