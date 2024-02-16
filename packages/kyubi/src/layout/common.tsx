@@ -3,7 +3,7 @@
  * @Author: Kyusho 
  * @Date: 2024-02-15 13:54:58 
  * @Last Modified by: Kyusho
- * @Last Modified time: 2024-02-16 14:13:37
+ * @Last Modified time: 2024-02-16 17:45:44
  */
 
 import {
@@ -11,6 +11,7 @@ import {
   useEffect,
   type FC,
   type PropsWithChildren,
+  useMemo,
 } from "react";
 import Head from "next/head";
 import Link from "next/link";
@@ -24,10 +25,14 @@ import ImageViewer from "../components/image-viewer";
 import DarkModeSwitch from "../components/dark-mode-switch";
 import MenuIcon from "../components/icons/menu-icon";
 import CloseIcon from "../components/icons/close-icon";
+import { APP_KEYS } from "../constance";
 import type { APP_KEY } from "../types";
+import type { IPageInfo } from "../loader";
 
 
 export interface IPageProps {
+  path: string;
+  pages: Pick<IPageInfo, 'appKey' | 'path' | 'title'>[];
   appKey: APP_KEY;
   basePaths: Record<APP_KEY, string>;
   title: string;
@@ -41,6 +46,8 @@ export interface IPageProps {
 }
 
 export const Page: FC<PropsWithChildren<IPageProps>> = ({
+  path,
+  pages,
   appKey,
   basePaths,
   title,
@@ -59,14 +66,42 @@ export const Page: FC<PropsWithChildren<IPageProps>> = ({
     setIsDrawerOpen(false);
   }, []);
 
+  const pageItems = useMemo<Record<APP_KEY, undefined | typeof pages>>(() => {
+    const result: Record<APP_KEY, typeof pages> = {
+      blog: [],
+      docs: [],
+      wiki: [],
+      extra: [],
+    };
+    for (const page of pages) {
+      result[page.appKey].push(page);
+    }
+    for (const key of APP_KEYS) {
+      if (!result[key].length) {
+        delete result[key];
+      }
+    }
+    return result;
+  }, [pages]);
+
+  const pagesOfThisLevel = useMemo(() => {
+    const dir = path.split("/").slice(0, -1).join("/");
+    return pages.filter(p => p.path.startsWith(dir));
+  }, [pageItems, path]);
+
   const menu = (
     <>
       {/* links */}
       <div className="w-full ky-flex-1 ky-flex ky-flex-col ky-justify-start ky-items-start">
-        <Link href="/blog" className="ky-m-2">Blog</Link>
-        <Link href="/docs" className="ky-m-2">Docs</Link>
-        <Link href="/wiki" className="ky-m-2">Wiki</Link>
-        <Link href="/extra" className="ky-m-2">Extra</Link>
+        {pagesOfThisLevel.map(page => (
+          <Link
+            key={page.path}
+            href={page.path}
+            className="ky-m-2"
+          >
+            {page.title}
+          </Link>
+        ))}
       </div>
       {/* tools */}
       <div className="w-full ky-flex-none ky-flex ky-flex-col ky-justify-start ky-items-start">
@@ -152,18 +187,33 @@ export const Page: FC<PropsWithChildren<IPageProps>> = ({
             <Link href="/" className="ky-m-2">Home</Link>
             <span role="separator" className="ky-m-2 ky-select-none ky-opacity-20 ky-pointer-events-none">|</span>
             {/* app links */}
-            {Object.entries(basePaths).map(([key, path]) => (
-              <Link
-                key={key}
-                href={path}
-                className={cn(
-                  "ky-m-2 hover:ky-opacity-100 hover:ky-underline",
-                  key === appKey ? "ky-opacity-90 ky-font-semibold" : "ky-opacity-60"
-                )}
-              >
-                {key}
-              </Link>
-            ))}
+            {Object.entries(basePaths).map(([key, path]) => {
+              const hasPages = Boolean(pageItems[key as APP_KEY]?.length);
+              if (!hasPages) {
+                // FIXME: remove the <span>
+                // return null;
+                return (
+                  <span
+                    key={key}
+                    className="ky-m-2 ky-opacity-20 ky-cursor-default"
+                  >
+                    {key}
+                  </span>
+                );
+              }
+              return (
+                <Link
+                  key={key}
+                  href={path}
+                  className={cn(
+                    "ky-m-2 hover:ky-opacity-100 hover:ky-underline",
+                    key === appKey ? "ky-opacity-90 ky-font-semibold" : "ky-opacity-60"
+                  )}
+                >
+                  {key}
+                </Link>
+              );
+            })}
           </div>
           <div className="ky-flex ky-justify-center ky-items-center">
             {/* <Link href="/login" className="ky-m-2">Login</Link>
