@@ -3,7 +3,7 @@
  * @Author: Kyusho 
  * @Date: 2024-02-15 13:54:58 
  * @Last Modified by: Kyusho
- * @Last Modified time: 2024-02-16 00:25:00
+ * @Last Modified time: 2024-02-16 14:13:37
  */
 
 import {
@@ -21,9 +21,15 @@ import Modal from "../elements/modal";
 import Button from "../elements/button";
 import TOC from "../components/toc";
 import ImageViewer from "../components/image-viewer";
+import DarkModeSwitch from "../components/dark-mode-switch";
+import MenuIcon from "../components/icons/menu-icon";
+import CloseIcon from "../components/icons/close-icon";
+import type { APP_KEY } from "../types";
 
 
 export interface IPageProps {
+  appKey: APP_KEY;
+  basePaths: Record<APP_KEY, string>;
   title: string;
   description: string;
   keywords: string;
@@ -34,7 +40,18 @@ export interface IPageProps {
   toc: TOCItem[];
 }
 
-export const Page: FC<PropsWithChildren<IPageProps>> = ({ title, description, keywords, tags, author, matter, toc: tocItems, children }) => {
+export const Page: FC<PropsWithChildren<IPageProps>> = ({
+  appKey,
+  basePaths,
+  title,
+  description,
+  keywords,
+  tags,
+  author,
+  matter,
+  toc: tocItems,
+  children
+}) => {
   const allTags = tags.join(",");
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -83,30 +100,6 @@ export const Page: FC<PropsWithChildren<IPageProps>> = ({ title, description, ke
     return () => window.removeEventListener("hashchange", handler);
   }, []);
 
-  useEffect(() => {
-    // read preference from localStorage / system
-    const darkMode = localStorage.getItem("kyubi-dark-mode");
-    const html = document.querySelector("html");
-    if (!html) {
-      return;
-    }
-    if (darkMode === "dark") {
-      html.classList.add("ky-dark");
-    } else if (darkMode === "light") {
-      html.classList.remove("ky-dark");
-    } else {
-      if (darkMode !== null) {
-        localStorage.removeItem("kyubi-dark-mode");
-      }
-      const media = window.matchMedia("(prefers-color-scheme: dark)");
-      if (media.matches) {
-        html.classList.add("ky-dark");
-      } else {
-        html.classList.remove("ky-dark");
-      }
-    }
-  }, []);
-
   return (
     <div className="__kyubi_page ky-relative ky-m-0 ky-p-0 ky-w-screen ky-h-screen ky-flex ky-flex-col ky-overflow-hidden ky-bg-gray-300 dark:ky-bg-gray-600 ky-text-gray-800 dark:ky-text-gray-100">
 
@@ -127,47 +120,56 @@ export const Page: FC<PropsWithChildren<IPageProps>> = ({ title, description, ke
         <aside
           className={cn(
             "__kyubi_drawer_mobile ky-flex ky-flex-col md:ky-hidden",
-            "ky-min-w-[25%] ky-max-w-[60%] ky-h-full ky-bg-gray-50 ky-shadow-lg",
+            "ky-min-w-[25%] ky-max-w-[70%] ky-h-full ky-bg-gray-100 dark:ky-bg-gray-800 ky-shadow-lg",
             "ky-transform ky-transition-transform ky-duration-300",
             isDrawerOpen ? "ky-translate-x-0" : "-ky-translate-x-full",
           )}
         >
           {menu}
         </aside>
+        <Button
+          className="ky-fixed ky-top-4 ky-right-4 md:ky-hidden"
+          onClick={() => setIsDrawerOpen(false)}
+          aria-label="close"
+        >
+          <CloseIcon />
+        </Button>
       </Modal>
 
       <div className="__kyubi_container ky-flex-none ky-flex ky-flex-col ky-w-full ky-h-full ky-overflow-hidden">
 
         {/* header */}
-        <nav className="__kyubi_nav ky-flex-none ky-flex ky-justify-between ky-items-center ky-p-4 ky-bg-white dark:ky-bg-gray-900 ky-shadow-lg">
+        <nav className="__kyubi_nav ky-flex-none ky-flex ky-justify-between ky-items-center ky-p-4 ky-bg-white dark:ky-bg-gray-900 ky-shadow-lg ky-capitalize">
           <Button
             className="ky-block md:ky-hidden"
             onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+            aria-label="menu"
           >
-            {"Menu"}
+            <MenuIcon open={isDrawerOpen} />
           </Button>
           {/* nav */}
           <div className="ky-flex ky-justify-center ky-items-center">
             <Link href="/" className="ky-m-2">Home</Link>
-            <Link href="/about" className="ky-m-2">About</Link>
+            <span role="separator" className="ky-m-2 ky-select-none ky-opacity-20 ky-pointer-events-none">|</span>
+            {/* app links */}
+            {Object.entries(basePaths).map(([key, path]) => (
+              <Link
+                key={key}
+                href={path}
+                className={cn(
+                  "ky-m-2 hover:ky-opacity-100 hover:ky-underline",
+                  key === appKey ? "ky-opacity-90 ky-font-semibold" : "ky-opacity-60"
+                )}
+              >
+                {key}
+              </Link>
+            ))}
           </div>
           <div className="ky-flex ky-justify-center ky-items-center">
-            <Link href="/login" className="ky-m-2">Login</Link>
-            <Link href="/register" className="ky-m-2">Register</Link>
+            {/* <Link href="/login" className="ky-m-2">Login</Link>
+            <Link href="/register" className="ky-m-2">Register</Link> */}
             {/* dark mode toggle */}
-            <button
-              className="ky-m-2"
-              onClick={() => {
-                const html = document.querySelector("html");
-                if (html) {
-                  html.classList.toggle("ky-dark");
-                  const darkMode = html.classList.contains("ky-dark") ? "dark" : "light";
-                  localStorage.setItem("kyubi-dark-mode", darkMode);
-                }
-              }}
-            >
-              {"Dark Mode"}
-            </button>
+            <DarkModeSwitch />
           </div>
         </nav>
 

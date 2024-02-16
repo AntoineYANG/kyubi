@@ -3,13 +3,15 @@
  * @Author: Kyusho 
  * @Date: 2024-02-15 23:38:23 
  * @Last Modified by: Kyusho
- * @Last Modified time: 2024-02-16 00:44:14
+ * @Last Modified time: 2024-02-16 13:55:38
  */
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import Modal from "../elements/modal";
 import Button from "../elements/button";
+import CloseIcon from "./icons/close-icon";
+import DownloadIcon from "./icons/download-icon";
 
 
 interface IImageViewerEventDetail {
@@ -102,30 +104,13 @@ const ImageViewer = memo(function ImageViewer () {
             onClick={handleDownload}
             aria-label="Download image"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              className="ky-w-8 ky-h-8 ky-pointer-events-none"
-            >
-              <path
-                d="M14 4v6h3L12 15l-5-5h3V4h4z"
-                stroke="none"
-                fill="currentColor"
-              />
-              <line x1="5" y1="19" x2="19" y2="19" stroke="currentColor" strokeWidth="2" />
-            </svg>
+            <DownloadIcon />
           </Button>
           <Button
-            className="ky-text-2xl"
             onClick={handleClose}
+            aria-label="Close"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              className="ky-w-8 ky-h-8 ky-pointer-events-none"
-            >
-              <path d="M18 6L6 18 M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <CloseIcon />
           </Button>
         </div>
         <div className="ky-flex-1 ky-overflow-hidden ky-cursor-zoom-out ky-flex" onClick={handleClose}>

@@ -1,6 +1,6 @@
 {
   "name": "kyubi-js",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.6",
   "license": "MIT",
   "description": "A website engine for the modern docs, blogs, wikis, and more. Based on MDX and Next.js.",
   "main": "dist/index.js",
@@ -28,11 +28,11 @@
     "dev": "yarn dev:core & yarn dev:layout"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=18"
   },
   "devDependencies": {
     "@types/next": "^9.0.0",
-    "@types/node": "^20.11.17",
+    "@types/node": ">=18",
     "@types/react": ">=17",
     "@types/react-dom": "^18.2.19",
     "@types/webpack": "^5.28.5",

@@ -2,12 +2,27 @@
  * @Author: Kyusho 
  * @Date: 2024-02-15 14:25:38 
  * @Last Modified by: Kyusho
- * @Last Modified time: 2024-02-15 22:44:22
+ * @Last Modified time: 2024-02-16 14:10:10
  */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+@layer base {
+  :root {
+    /* For hsl */
+    --color-primary: 198deg 93% 60%;
+    --color-secondary: 198deg 80% 60%;
+    --color-info: 207deg 90% 54%;
+    --color-success: 134deg 61% 41%;
+    --color-warning: 40deg 100% 50%;
+    --color-danger: 0deg 100% 50%;
+    --color-outline: 0deg 0% 100%;
+  }
+}
 
 
 /* reset ul style */

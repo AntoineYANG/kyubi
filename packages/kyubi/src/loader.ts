@@ -2,7 +2,7 @@
  * @Author: Kyusho 
  * @Date: 2024-02-14 22:26:33 
  * @Last Modified by: Kyusho
- * @Last Modified time: 2024-02-16 01:03:19
+ * @Last Modified time: 2024-02-16 11:53:43
  */
 
 import path from "node:path";
@@ -14,6 +14,7 @@ import type { IKyubiConfig } from "./utils/get-kyubi-config";
 import { emitFileSync } from "./utils/file-helper";
 import { intermediatesDir, kyubiDir } from "./constance";
 import { parseTOC } from "./utils/md-helper";
+import type { APP_KEY } from "./types";
 
 
 interface ILoaderContext {
@@ -41,6 +42,24 @@ const makeProcessor = async (): Promise<CreateProcessor> => {
 const loader: ILoader = function (this, source) {
   const { resourcePath } = this;
   const { config, rootDir } = this.getOptions();
+  const pagesDir = path.join(rootDir, "pages");
+  const relativePath = `/${path.relative(pagesDir, resourcePath).replaceAll(/\\/g, "/").replace(/\.[^.]+$/, "")}`;
+  const dirBase = `/${relativePath.split("/")[1]}`;
+  const basePathMap: Record<string, APP_KEY> = {
+    [config.blog.basePath]: "blog",
+    [config.docs.basePath]: "docs",
+    [config.wiki.basePath]: "wiki",
+    [config.extra.basePath]: "extra",
+  };
+  const appKey = basePathMap[dirBase];
+  if (!appKey) {
+    const err = new Error(
+      `The path "${dirBase}" of file "${resourcePath}" is not a valid base path, please check the kyubi config.
+To include this file, you need to put it under the right base path (one of ${Object.keys(basePathMap).join(", ")}) or update the kyubi config.`
+    );
+    this.emitWarning(err);
+    return this.callback(err);
+  }
   const callback = this.async();
   const { content, data } = grayMatter(source);
   const toc = parseTOC(content);
@@ -93,6 +112,13 @@ import "kyubi-js/index.css";`
     parts.splice(defaultExportIndex, 1, (
 `export default function KyubiMDXPage(props) {
   return _jsx(Page, {
+    appKey: "${appKey}",
+    basePaths: ${JSON.stringify({
+      blog: config.blog.basePath,
+      docs: config.docs.basePath,
+      wiki: config.wiki.basePath,
+      extra: config.extra.basePath,
+    })},
     title: "${title}",
     description: "${description}",
     keywords: "${keywords}",
@@ -112,7 +138,7 @@ import "kyubi-js/index.css";`
   });
 }`
     ));
-    const data = `// Path: ${resourcePath}
+    const data = `// Path: ${relativePath} (file:${resourcePath})
 
 // --------------------------------
 
@@ -121,7 +147,7 @@ ${`${parts.join("\n//////////////\n")}`}
 // --------------------------------
 `;
     if (config.debugIntermediates) {
-      emitFileSync(path.join(rootDir, kyubiDir, intermediatesDir, path.relative(path.join(rootDir, "pages"), resourcePath)), data);
+      emitFileSync(path.join(rootDir, kyubiDir, intermediatesDir, path.relative(pagesDir, resourcePath)), data);
     }
     callback(null, data);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

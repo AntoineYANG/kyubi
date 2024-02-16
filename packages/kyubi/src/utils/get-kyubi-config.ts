@@ -45,6 +45,11 @@ export interface IKyubiConfig {
    * @default false
    */
   debugIntermediates: boolean;
+  /**
+   * If true, the sitemap will be generated for the website.
+   * @default true
+   */
+  sitemap: boolean;
 }
 
 export type KyubiConfig = AllPartial<IKyubiConfig>;
@@ -66,6 +71,7 @@ export const defaultKyubiConfig: IKyubiConfig = {
     basePath: "/extra",
   },
   debugIntermediates: false,
+  sitemap: true,
 };
 
 export const defineConfig = (config: KyubiConfig | ((config: IKyubiConfig) => KyubiConfig)): IKyubiConfig => {
